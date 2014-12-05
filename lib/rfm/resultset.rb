@@ -92,7 +92,6 @@ module Rfm
       parse_portals(meta) if @include_portals
       
       Rfm::Record.build_records(resultset.xpath('record'), self, @field_meta, @layout)
-      
     end
     
     private
@@ -106,7 +105,7 @@ module Rfm
     
       def parse_fields(meta)
         meta.xpath('field-definition').each do |field|
-          @field_meta[field['name']] = Rfm::Metadata::Field.new(field)
+          @field_meta[field['name']] = Rfm::Metadata::Field.new(field) unless field['name'].nil?
         end
       end
 
