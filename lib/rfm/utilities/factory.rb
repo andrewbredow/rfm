@@ -20,7 +20,7 @@ module Rfm
       
       def all
         if !@loaded
-          Rfm::Resultset.new(@server, @server.connect('-dbnames', {}).body).each {|record|
+          Rfm::Resultset.new(@server, @server.connect('-dbnames', {}).body, nil).each {|record|
             name = record['DATABASE_NAME']
             self[name] = Rfm::Database.new(name, @server) if self[name] == nil
           }
@@ -45,9 +45,9 @@ module Rfm
       
       def all
         if !@loaded
-          Rfm::Resultset.new(@server, @server.connect('-layoutnames', {"-db" => @database.name}).body).each {|record|
-            name = record['LAYOUT_NAME']
-            self[name] = Rfm::Layout.new(name, @database) if self[name] == nil
+          Rfm::Resultset.new(@server, @server.connect('-layoutnames', {"-db" => @database.name}).body, nil).each {|record|
+            name = record['layout_name']
+            self[name] = Rfm::Layout.new(name, @database) if name.present? && self[name] == nil
           }
           @loaded = true
         end
@@ -70,7 +70,7 @@ module Rfm
       
       def all
         if !@loaded
-          Rfm::Resultset.new(@server, @server.connect('-scriptnames', {"-db" => @database.name}).body).each {|record|
+          Rfm::Resultset.new(@server, @server.connect('-scriptnames', {"-db" => @database.name}).body, nil).each {|record|
             name = record['SCRIPT_NAME']
             self[name] = Rfm::Script.new(name, @database) if self[name] == nil
           }
