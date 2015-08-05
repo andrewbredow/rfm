@@ -79,7 +79,7 @@ module Rfm
         case self.result
         when "text"      then value
         when "number"    then BigDecimal.new(value)
-        when "date"      then Date.strptime(value, resultset.date_format)
+        when "date"      then parse_date(value, resultset.date_format)
         when "time"      then DateTime.strptime("1/1/-4712 #{value}", "%m/%d/%Y #{resultset.time_format}")
         when "timestamp" then DateTime.strptime(value, resultset.timestamp_format)
         # URI.parse fails on many FileMaker URIs
@@ -88,6 +88,14 @@ module Rfm
         else nil
         end
 
+      end
+
+      def parse_date(value, date_format)
+        begin
+          Date.strptime(value, date_format)
+        rescue ArgumentError
+          nil
+        end
       end
 
     end
